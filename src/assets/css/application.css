@@ -1,6 +1,7 @@
 body {
   padding-top: 54px;
 }
-#navbarResponsive {
-  display: inline-block;
+
+.nav-item {
+  display: flex;
 }
