@@ -10,7 +10,8 @@
   "author": "Benjamin",
   "license": "ISC",
   "devDependencies": {
-    "jasmine": "^3.0.0",
+    "faker": "^4.1.0",
+    "jasmine": "^3.4.0",
     "request": "^2.83.0"
   },
   "dependencies": {
