@@ -48,7 +48,7 @@ module.exports = {
       });
   },
   updateTopic(id, updatedTopic, callback) {
-    return Topic.findById(id).then(topic => {
+    return Topic.findByPk(id).then(topic => {
       if (!topic) {
         return callback("Topic not found");
       }
