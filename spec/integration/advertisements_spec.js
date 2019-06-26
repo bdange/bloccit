@@ -13,7 +13,7 @@ describe("routes : advertisements", () => {
       })
       .then(res => {
         Advertisement.create({
-          title: "JS Frameworks",
+          title: "JavaScript Frameworks",
           description: "There are a lot of them"
         })
           .then(advertisement => {
@@ -32,7 +32,7 @@ describe("routes : advertisements", () => {
         expect(res.statusCode).toBe(200);
         expect(err).toBeNull();
         expect(body).toContain("Advertisements");
-        expect(body).toContain("JS Frameworks");
+        expect(body).toContain("JavaScript Frameworks");
         done();
       });
     });
@@ -82,7 +82,7 @@ describe("routes : advertisements", () => {
     it("should render a view with the selected advertisement", done => {
       request.get(`${base}${this.advertisement.id}`, (err, res, body) => {
         expect(err).toBeNull();
-        expect(body).toContain("JS Frameworks");
+        expect(body).toContain("JavaScript Frameworks");
         done();
       });
     });
@@ -115,7 +115,7 @@ describe("routes : advertisements", () => {
       request.get(`${base}${this.advertisement.id}/edit`, (err, res, body) => {
         expect(err).toBeNull();
         expect(body).toContain("Edit Advertisement");
-        expect(body).toContain("JS Frameworks");
+        expect(body).toContain("JavaScript Frameworks");
         done();
       });
     });
