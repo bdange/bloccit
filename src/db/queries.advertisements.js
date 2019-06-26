@@ -1,8 +1,9 @@
 const Advertisement = require("./models").Advertisement;
 
 module.exports = {
-  getAllAdvertisement(callback) {
+  getAllAdvertisements(callback) {
     return Advertisement.all()
+
       .then(advertisements => {
         callback(null, advertisements);
       })
@@ -10,6 +11,7 @@ module.exports = {
         callback(err);
       });
   },
+
   getAdvertisement(id, callback) {
     return Advertisement.findById(id)
       .then(advertisement => {
@@ -19,6 +21,7 @@ module.exports = {
         callback(err);
       });
   },
+
   addAdvertisement(newAdvertisement, callback) {
     return Advertisement.create({
       title: newAdvertisement.title,
@@ -31,17 +34,7 @@ module.exports = {
         callback(err);
       });
   },
-  deleteAdvertisement(id, callback) {
-    return Advertisement.destroy({
-      where: { id }
-    })
-      .then(advertisement => {
-        callback(null, advertisement);
-      })
-      .catch(err => {
-        callback(err);
-      });
-  },
+
   updateAdvertisement(id, updatedAdvertisement, callback) {
     return Advertisement.findById(id).then(advertisement => {
       if (!advertisement) {
@@ -58,5 +51,17 @@ module.exports = {
           callback(err);
         });
     });
+  },
+
+  deleteAdvertisement(id, callback) {
+    return Advertisement.destroy({
+      where: { id }
+    })
+      .then(advertisement => {
+        callback(null, advertisement);
+      })
+      .catch(err => {
+        callback(err);
+      });
   }
 };

@@ -1,20 +1,17 @@
 const Topic = require("./models").Topic;
 
 module.exports = {
-  //#1
   getAllTopics(callback) {
-    return (
-      Topic.all()
+    return Topic.all()
 
-        //#2
-        .then(topics => {
-          callback(null, topics);
-        })
-        .catch(err => {
-          callback(err);
-        })
-    );
+      .then(topics => {
+        callback(null, topics);
+      })
+      .catch(err => {
+        callback(err);
+      });
   },
+
   getTopic(id, callback) {
     return Topic.findById(id)
       .then(topic => {
@@ -24,6 +21,7 @@ module.exports = {
         callback(err);
       });
   },
+
   addTopic(newTopic, callback) {
     return Topic.create({
       title: newTopic.title,
@@ -36,24 +34,12 @@ module.exports = {
         callback(err);
       });
   },
-  deleteTopic(id, callback) {
-    return Topic.destroy({
-      where: { id }
-    })
-      .then(topic => {
-        callback(null, topic);
-      })
-      .catch(err => {
-        callback(err);
-      });
-  },
+
   updateTopic(id, updatedTopic, callback) {
-    return Topic.findByPk(id).then(topic => {
+    return Topic.findById(id).then(topic => {
       if (!topic) {
         return callback("Topic not found");
       }
-
-      //#1
       topic
         .update(updatedTopic, {
           fields: Object.keys(updatedTopic)
@@ -65,5 +51,17 @@ module.exports = {
           callback(err);
         });
     });
+  },
+
+  deleteTopic(id, callback) {
+    return Topic.destroy({
+      where: { id }
+    })
+      .then(topic => {
+        callback(null, topic);
+      })
+      .catch(err => {
+        callback(err);
+      });
   }
 };

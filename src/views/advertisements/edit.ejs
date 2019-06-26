@@ -10,7 +10,7 @@
       <h1>Edit Advertisement</h1>
 
       <form
-        action="/advertisement/<%= advertisement.id %>/update"
+        action="/advertisements/<%= advertisement.id %>/update"
         method="post"
       >
         <div class="form-group">
@@ -32,7 +32,7 @@
             name="description"
             placeholder="Enter Description"
           >
-	<%= advertisement.description %></textarea
+<%= advertisement.description %></textarea
           >
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
