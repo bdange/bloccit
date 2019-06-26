@@ -1,20 +1,17 @@
-const advertisementQueries = require("../db/queries.advertisements.js");
+const advertisementQueries = require("../db/queries.advertisement.js");
 
 module.exports = {
   index(req, res, next) {
-    advertisementQueries.getAllAdvertisements((err, advertisements) => {
+    advertisementQueries.getAllAdvertisement((err, advertisements) => {
       if (err) {
         res.redirect(500, "static/index");
       } else {
-        res.render("advertisements/index", {
-          advertisements
-        });
+        res.render("advertisement/index", { advertisements });
       }
     });
   },
-
   new(req, res, next) {
-    res.render("advertisements/new");
+    res.render("advertisement/new");
   },
   create(req, res, next) {
     let newAdvertisement = {
@@ -25,9 +22,9 @@ module.exports = {
       newAdvertisement,
       (err, advertisement) => {
         if (err) {
-          res.redirect(500, "/advertisements/new");
+          res.redirect(500, "/advertisement/new");
         } else {
-          res.redirect(303, `/advertisements/${advertisement.id}`);
+          res.redirect(303, `/advertisement/${advertisement.id}`);
         }
       }
     );
@@ -39,23 +36,23 @@ module.exports = {
         if (err || advertisement == null) {
           res.redirect(404, "/");
         } else {
-          res.render("advertisements/show", {
-            advertisement
-          });
+          res.render("advertisement/show", { advertisement });
         }
       }
     );
   },
   destroy(req, res, next) {
-    advertisementQueries.deleteAdvertisement(req.params.id, (err, topic) => {
-      if (err) {
-        res.redirect(500, `/advertisements/${advertisement.id}`);
-      } else {
-        res.redirect(303, "advertisements");
+    advertisementQueries.deleteAdvertisement(
+      req.params.id,
+      (err, advertisement) => {
+        if (err) {
+          res.redirect(500, `/advertisement/${advertisement.id}`);
+        } else {
+          res.redirect(303, "/advertisement");
+        }
       }
-    });
+    );
   },
-
   edit(req, res, next) {
     advertisementQueries.getAdvertisement(
       req.params.id,
@@ -63,9 +60,7 @@ module.exports = {
         if (err || advertisement == null) {
           res.redirect(404, "/");
         } else {
-          res.render("advertisements/edit", {
-            advertisement
-          });
+          res.render("advertisement/edit", { advertisement });
         }
       }
     );
@@ -76,9 +71,9 @@ module.exports = {
       req.body,
       (err, advertisement) => {
         if (err || advertisement == null) {
-          res.redirect(404, `/advertisements/${req.params.id}/edit`);
+          res.redirect(404, `/advertisement/${req.params.id}/edit`);
         } else {
-          res.redirect(`/advertisements/${advertisement.id}`);
+          res.redirect(`/advertisement/${advertisement.id}`);
         }
       }
     );

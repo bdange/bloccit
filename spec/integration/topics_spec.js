@@ -9,7 +9,7 @@ describe("routes : topics", () => {
     this.topic;
     sequelize.sync({ force: true }).then(res => {
       Topic.create({
-        title: "JS Frameworks",
+        title: "JavaScript Frameworks",
         description: "There is a lot of them"
       })
         .then(topic => {
@@ -29,7 +29,7 @@ describe("routes : topics", () => {
         expect(res.statusCode).toBe(200);
         expect(err).toBeNull();
         expect(body).toContain("Topics");
-        expect(body).toContain("JS Frameworks");
+        expect(body).toContain("JavaScript Frameworks");
         done();
       });
     });
@@ -47,7 +47,7 @@ describe("routes : topics", () => {
     it("should return a view with the selected topic", done => {
       request.get(`${base}${this.topic.id}`, (err, res, body) => {
         expect(err).toBeNull();
-        expect(body).toContain("JS Frameworks");
+        expect(body).toContain("JavaScript Frameworks");
         done();
       });
     });
