@@ -1,55 +1,99 @@
-const Post = require("./models").Post;
 const Topic = require("./models").Topic;
+const Post = require("./models").Post;
 
 module.exports = {
-  addPost(newPost, callback) {
-    return Post.create(newPost)
-      .then(post => {
-        callback(null, post);
+  getAllTopics(callback) {
+    return Topic.all()
+
+      .then(topics => {
+        callback(null, topics);
       })
       .catch(err => {
         callback(err);
       });
   },
 
-  getPost(id, callback) {
-    return Post.findById(id)
-      .then(post => {
-        callback(null, post);
-      })
-      .catch(err => {
-        callback(err);
-      });
-  },
-
-  deletePost(id, callback) {
-    return Post.destroy({
-      where: { id }
+  getTopic(id, callback) {
+    return Topic.findById(id, {
+      include: [
+        {
+          model: Post,
+          as: "posts"
+        }
+      ]
     })
-      .then(deletedRecordsCount => {
-        callback(null, deletedRecordsCount);
+      .then(topic => {
+        callback(null, topic);
       })
       .catch(err => {
         callback(err);
       });
   },
 
-  updatePost(id, updatedPost, callback) {
-    return Post.findById(id).then(post => {
-      if (!post) {
-        return callback("Post not found");
+  addTopic(newTopic, callback) {
+    return Topic.create({
+      title: newTopic.title,
+      description: newTopic.description
+    })
+      .then(topic => {
+        callback(null, topic);
+      })
+      .catch(err => {
+        callback(err);
+      });
+  },
+
+  updateTopic(req, updatedTopic, callback) {
+    // #1
+    return Topic.findById(req.params.id).then(topic => {
+      // #2
+      if (!topic) {
+        return callback("Topic not found");
       }
 
-      post
-        .update(updatedPost, {
-          fields: Object.keys(updatedPost)
-        })
-        .then(() => {
-          callback(null, post);
-        })
-        .catch(err => {
-          callback(err);
-        });
+      // #3
+      const authorized = new Authorizer(req.user, topic).update();
+
+      if (authorized) {
+        // #4
+        topic
+          .update(updatedTopic, {
+            fields: Object.keys(updatedTopic)
+          })
+          .then(() => {
+            callback(null, topic);
+          })
+          .catch(err => {
+            callback(err);
+          });
+      } else {
+        // #5
+        req.flash("notice", "You are not authorized to do that.");
+        callback("Forbidden");
+      }
     });
+  },
+
+  deleteTopic(req, callback) {
+    // #1
+    return Topic.findById(req.params.id)
+      .then(topic => {
+        // #2
+        const authorized = new Authorizer(req.user, topic).destroy();
+
+        if (authorized) {
+          // #3
+          topic.destroy().then(res => {
+            callback(null, topic);
+          });
+        } else {
+          // #4
+          req.flash("notice", "You are not authorized to do that.");
+          callback(401);
+        }
+      })
+      .catch(err => {
+        callback(err);
+      });
   }
 };
