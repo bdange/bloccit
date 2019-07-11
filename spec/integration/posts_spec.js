@@ -47,7 +47,8 @@ describe("routes : posts", () => {
     });
   });
 
-  describe("guest user performing CRUD actions for post", () => {
+  // define the guest user context
+  describe("guest user performing CRUD actions for Post", () => {
     beforeEach(done => {
       request.get(
         {
@@ -115,7 +116,7 @@ describe("routes : posts", () => {
         request.post(
           `${base}/${this.topic.id}/posts/${this.post.id}/destroy`,
           (err, res, body) => {
-            Post.findByPk(1).then(post => {
+            Post.findById(1).then(post => {
               expect(post).not.toBeNull();
               done();
             });
@@ -129,7 +130,7 @@ describe("routes : posts", () => {
         request.get(
           `${base}/${this.topic.id}/posts/${this.post.id}/edit`,
           (err, res, body) => {
-            expect(body).not.toContain("Edit");
+            expect(body).not.toContain("Edit Post");
             done();
           }
         );
@@ -155,7 +156,7 @@ describe("routes : posts", () => {
     });
   });
 
-  describe("owner or admin user performing CRUD actions for post", () => {
+  describe("owner or admin user performing CRUD actions for Post", () => {
     beforeEach(done => {
       User.create({
         email: "admin@example.com",
@@ -224,7 +225,7 @@ describe("routes : posts", () => {
             body: "b"
           }
         };
-        request.post(options, (err, req, body) => {
+        request.post(options, (err, res, body) => {
           Post.findOne({ where: { title: "a" } })
             .then(post => {
               expect(post).toBeNull();
@@ -258,7 +259,7 @@ describe("routes : posts", () => {
         request.post(
           `${base}/${this.topic.id}/posts/${this.post.id}/destroy`,
           (err, res, body) => {
-            Post.findByPk(1).then(post => {
+            Post.findById(1).then(post => {
               expect(err).toBeNull();
               expect(post).toBeNull();
               done();
@@ -274,7 +275,7 @@ describe("routes : posts", () => {
           `${base}/${this.topic.id}/posts/${this.post.id}/edit`,
           (err, res, body) => {
             expect(err).toBeNull();
-            expect(body).toContain("Edit");
+            expect(body).toContain("Edit Post");
             expect(body).toContain("Snowball Fighting");
             done();
           }
