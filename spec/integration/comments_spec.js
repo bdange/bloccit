@@ -209,5 +209,94 @@ describe("routes : comments", () => {
         });
       });
     });
-  }); //end context for signed in user
+  });
+  // test for user trying to delete another member user's comment. This should not be successful.
+  describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+    beforeEach(done => {
+      User.create({
+        email: "test@example.com",
+        password: "test-test",
+        role: "member"
+      }).then(user => {
+        request.get(
+          {
+            url: "http://localhost:3000/auth/fake",
+            form: {
+              role: user.role,
+              userId: user.id,
+              email: user.email
+            }
+          },
+          (err, res, body) => {
+            done();
+          }
+        );
+      });
+    });
+
+    it("should not delete another members comment", done => {
+      Comment.all().then(comments => {
+        const commentCountBeforeDelete = comments.length;
+        expect(commentCountBeforeDelete).toBe(1);
+        request.post(
+          `${base}${this.topic.id}/posts/${this.post.id}/comments/${
+            this.comment.id
+          }/destroy`,
+          (err, res, body) => {
+            expect(res.statusCode).toBe(401);
+            Comment.all().then(comments => {
+              expect(err).toBeNull();
+              expect(comments.length).toBe(commentCountBeforeDelete);
+              done();
+            });
+          }
+        );
+      });
+    });
+
+    // test to ensure admin user can delete another member user's comment
+    describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+      beforeEach(done => {
+        User.create({
+          email: "admin@example.com",
+          password: "admin-test",
+          role: "admin"
+        }).then(user => {
+          request.get(
+            {
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: user.role,
+                userId: user.id,
+                email: user.email
+              }
+            },
+            (err, res, body) => {
+              done();
+            }
+          );
+        });
+      });
+
+      it("should delete another members comment", done => {
+        Comment.all().then(comments => {
+          const commentCountBeforeDelete = comments.length;
+          expect(commentCountBeforeDelete).toBe(1);
+          request.post(
+            `${base}${this.topic.id}/posts/${this.post.id}/comments/${
+              this.comment.id
+            }/destroy`,
+            (err, res, body) => {
+              expect(res.statusCode).toBe(302);
+              Comment.all().then(comments => {
+                expect(err).toBeNull();
+                expect(comments.length).toBe(commentCountBeforeDelete - 1);
+                done();
+              });
+            }
+          );
+        });
+      });
+    });
+  });
 });
