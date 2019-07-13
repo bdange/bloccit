@@ -196,7 +196,7 @@ describe("routes : posts", () => {
           form: {
             title: "Watching snow melt",
             body:
-              "Without a doubt my favoriting things to do besides watching paint dry!"
+              "Without a doubt my favorite things to do besides watching paint dry!"
           }
         };
         request.post(options, (err, res, body) => {
@@ -205,7 +205,7 @@ describe("routes : posts", () => {
               expect(post).not.toBeNull();
               expect(post.title).toBe("Watching snow melt");
               expect(post.body).toBe(
-                "Without a doubt my favoriting things to do besides watching paint dry!"
+                "Without a doubt my favorite things to do besides watching paint dry!"
               );
               expect(post.topicId).not.toBeNull();
               done();
