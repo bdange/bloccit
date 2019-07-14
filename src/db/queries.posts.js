@@ -16,15 +16,8 @@ module.exports = {
   },
   getPost(id, callback) {
     return Post.findById(id, {
-      include: [
-        { model: Comment, as: "comments", include: [{ model: User }] },
-        { model: Vote, as: "votes" }
-      ]
-    });
-  },
-
-  deletePost(req, callback) {
-    return Post.findById(req.params.id)
+      include: [{ model: Comment, as: "comments", include: [{ model: User }] }]
+    })
       .then(post => {
         callback(null, post);
       })
@@ -32,6 +25,7 @@ module.exports = {
         callback(err);
       });
   },
+
   deletePost(id, callback) {
     return Post.destroy({
       where: { id }
