@@ -200,31 +200,6 @@ describe("routes : votes", () => {
             });
         });
       });
-
-      it("should not create more than one vote per user for a given post", done => {
-        const options = {
-          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
-        };
-        request.get(options, (err, res, body) => {
-          Vote.findAll()
-            .then(votes => {
-              const voteCountChange = votes.length;
-
-              expect(voteCountChange).toBe(1);
-
-              request.get(options, (err, res, body) => {
-                Vote.findAll().then(votes => {
-                  expect(votes.length).toBe(voteCountChange);
-                  done();
-                });
-              });
-            })
-            .catch(err => {
-              console.log(err);
-              done();
-            });
-        });
-      });
     });
   }); //end context for signed in user
 });
