@@ -259,7 +259,7 @@ describe("routes : comments", () => {
       beforeEach(done => {
         User.create({
           email: "admin@example.com",
-          password: "admin-test",
+          password: "123456",
           role: "admin"
         }).then(user => {
           request.get(
