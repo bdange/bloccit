@@ -5,34 +5,44 @@
   </head>
   <body>
     <% include ../static/partials/navbar.ejs %>
-    <main class="container">
-      <% include ../static/partials/messages.ejs %>
 
+    <main class="container">
       <div style="display: flex; align-items:center;">
-        <% if(currentUser) { %>
-          <% include ../votes/voting.ejs %>
-        <% } %>
+        <% if(currentUser) { %> <% include ../votes/voting.ejs %> <% } %>
         <h1><%= post.title %></h1>
       </div>
-      <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
-      	<form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
-       	   <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-     <p><%= post.body %></p>
-     <section id="comment-form">
-       <% if(currentUser) { %>
-        <% include ../comments/new.ejs %>
-       <% } %>
-     </section>
+      <% if(currentUser && (currentUser.isOwner || currentUser.isAdmin)) { %>
+      <a
+        href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit"
+        class="btn btn-warning"
+        >Edit</a
+      >
+      <form
+        style="display:initial"
+        action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy"
+        method="post"
+      >
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+      <% } %>
 
-     <section id="comment-list">
-       <% if(post.comments) { %>
-         <% post.comments.forEach((comment) => { %>
-           <%- include("../comments/show.ejs", {comment}) %>
-         <% }) %>
-    <% } %>
-    </section>
+      <p>
+        <%= post.body %>
+      </p>
+      <section id="comment-form">
+        <!-- #1 -->
+        <% if(currentUser) { %> <% include ../comments/new.ejs %> <% } %>
+      </section>
+
+      <!-- #2 -->
+      <section id="comment-list">
+        <% if(post.comments) { %> <% post.comments.forEach((comment) => { %>
+
+        <!-- #3 -->
+        <%- include("../comments/show.ejs", {comment}) %> <% }) %> <% } %>
+      </section>
+    </main>
+
     <% include ../static/partials/baseScripts.ejs %>
-
   </body>
 </html>

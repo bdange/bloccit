@@ -57,9 +57,6 @@ describe("routes : votes", () => {
       });
     });
   });
-
-  // test suites go here
-  // #1
   describe("guest attempting to vote on a post", () => {
     beforeEach(done => {
       // before each suite in this context
@@ -75,7 +72,7 @@ describe("routes : votes", () => {
         }
       );
     });
-    //User not signed-in and not able to vote
+
     describe("GET /topics/:topicId/posts/:postId/votes/upvote", () => {
       it("should not create a new vote", done => {
         const options = {
@@ -101,8 +98,6 @@ describe("routes : votes", () => {
       });
     });
   });
-  // User signed-in and able to vote
-  // #1
   describe("signed in user voting on a post", () => {
     beforeEach(done => {
       // before each suite in this context
@@ -140,31 +135,6 @@ describe("routes : votes", () => {
               expect(vote.userId).toBe(this.user.id);
               expect(vote.postId).toBe(this.post.id);
               done();
-            })
-            .catch(err => {
-              console.log(err);
-              done();
-            });
-        });
-      });
-
-      it("should not create more than one vote per user for a given post", done => {
-        const options = {
-          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
-        };
-        request.get(options, (err, res, body) => {
-          Vote.findAll()
-            .then(votes => {
-              const voteCountChange = votes.length;
-
-              expect(voteCountChange).toBe(1);
-
-              request.get(options, (err, res, body) => {
-                Vote.findAll().then(votes => {
-                  expect(votes.length).toBe(voteCountChange);
-                  done();
-                });
-              });
             })
             .catch(err => {
               console.log(err);
