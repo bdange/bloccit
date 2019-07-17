@@ -1,20 +1,17 @@
-// #1
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
-const Comment = require("../../src/db/models").Comment;
 const User = require("../../src/db/models").User;
 const Vote = require("../../src/db/models").Vote;
+const Comment = require("../../src/db/models").Comment;
 
 describe("Vote", () => {
   beforeEach(done => {
-    // #2
     this.user;
     this.topic;
     this.post;
     this.vote;
 
-    // #3
     sequelize.sync({ force: true }).then(res => {
       User.create({
         email: "starman@tesla.com",
@@ -69,16 +66,13 @@ describe("Vote", () => {
   });
 
   describe("#create()", () => {
-    // #2
     it("should create an upvote on a post for a user", done => {
-      // #3
       Vote.create({
         value: 1,
         postId: this.post.id,
         userId: this.user.id
       })
         .then(vote => {
-          // #4
           expect(vote.value).toBe(1);
           expect(vote.postId).toBe(this.post.id);
           expect(vote.userId).toBe(this.user.id);
@@ -90,7 +84,6 @@ describe("Vote", () => {
         });
     });
 
-    // #5
     it("should create a downvote on a post for a user", done => {
       Vote.create({
         value: -1,
@@ -109,7 +102,22 @@ describe("Vote", () => {
         });
     });
 
-    // #6
+    it("should not create a vote other than 1 or -1 on a post for a user", done => {
+      Vote.create({
+        value: 0,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+        .then(vote => {
+          //won't be evaluated
+          done();
+        })
+        .catch(err => {
+          expect(err.message).toContain("Validation isIn on value failed");
+          done();
+        });
+    });
+
     it("should not create a vote without assigned post or user", done => {
       Vote.create({
         value: 1
@@ -161,7 +169,6 @@ describe("Vote", () => {
     });
   });
 
-  // #2
   describe("#getUser()", () => {
     it("should return the associated user", done => {
       Vote.create({
@@ -217,9 +224,8 @@ describe("Vote", () => {
     });
   });
 
-  // #2
   describe("#getPost()", () => {
-    it("should return the associated post", done => {
+    it("should return the corresponding post", done => {
       Vote.create({
         value: 1,
         userId: this.user.id,
@@ -232,6 +238,46 @@ describe("Vote", () => {
             );
             done();
           });
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+  });
+
+  describe("#hasUpvoteFor()", () => {
+    it("should return true if user has an upvote for this post", done => {
+      Vote.create({
+        value: 1,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+        .then(vote => {
+          this.post.votes = vote;
+          const hasUpvote = this.post.hasUpvoteFor(vote.userId);
+          expect(hasUpvote).toBe(true);
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+  });
+
+  describe("#hasDownvoteFor()", () => {
+    it("should return true if user has downvoted this post", done => {
+      Vote.create({
+        value: -1,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+        .then(vote => {
+          this.post.votes = vote;
+          const hasDownvote = this.post.hasDownvoteFor(vote.userId);
+          expect(hasDownvote).toBe(true);
+          done();
         })
         .catch(err => {
           console.log(err);
