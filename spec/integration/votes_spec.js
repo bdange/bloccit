@@ -71,7 +71,7 @@ describe("routes : votes", () => {
     });
 
     describe("GET /topics/:topicId/posts/:postId/votes/upvote", () => {
-      it("should create a new vote", done => {
+      it("should not create a new vote", done => {
         const options = {
           url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
         };
@@ -84,7 +84,7 @@ describe("routes : votes", () => {
             }
           })
             .then(vote => {
-              expect(vote).not.toBeNull();
+              expect(vote).toBeNull();
               done();
             })
             .catch(err => {
