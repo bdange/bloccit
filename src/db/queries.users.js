@@ -28,7 +28,7 @@ module.exports = {
   getUser(id, callback) {
     // #1
     let result = {};
-    User.findById(id).then(user => {
+    User.findByPk(id).then(user => {
       // #2
       if (!user) {
         callback(404);
@@ -47,20 +47,16 @@ module.exports = {
               .then(comments => {
                 // #7
                 result["comments"] = comments;
+              });
+            Favorite.scope({ method: ["favoritePosts", id] })
+              .all()
+              .then(favorites => {
+                result["favorites"] = favorites;
                 callback(null, result);
               })
               .catch(err => {
                 callback(err);
               });
-          });
-        Favorite.scope({ method: ["favoritePosts", id] })
-          .findAll()
-          .then(favorites => {
-            result["favorites"] = favorites;
-            callback(null, result);
-          })
-          .catch(err => {
-            callback(err);
           });
       }
     });
