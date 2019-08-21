@@ -3,23 +3,23 @@
   <head>
     <% include ../static/partials/head.ejs %>
   </head>
+
   <body>
     <% include ../static/partials/navbar.ejs %>
 
     <main class="container">
       <% include ../static/partials/messages.ejs %>
 
-      <!-- #1 -->
-      <h1><%= `${user.email}'s profile` %></h1>
+      <h1>
+        <%= `${user.email}'s profile` %>
+      </h1>
 
       <hr />
 
       <h2>Latest Posts</h2>
 
       <ul class="list-unstyled">
-        <!-- #2 -->
         <% if(posts) { %> <% posts.forEach((post) => { %>
-        <!-- #3 -->
         <li>
           <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
             <%= post.title %>
@@ -32,13 +32,10 @@
       <h2>Latest Comments</h2>
 
       <ul class="list-unstyled">
-        <!-- #4 -->
         <% if(comments) { %> <% comments.forEach((comment) => { %>
-
-        <!-- #5 -->
         <li>
-          <span>Post: </span
-          ><a
+          <span>Post: </span>
+          <a
             href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>"
           >
             <%= comment.Post.title %>
@@ -56,14 +53,13 @@
       <ul class="list-unstyled">
         <% if(favorites) { %> <% favorites.forEach((favorite) => { %>
         <li>
-          <span>Post: </span>
+          <span>Favorited Post: </span>
           <a href="/topics/<%= favorite.postId %>/posts/<%= favorite.postId %>">
-            <%= favorite.Post.title %>
-          </a>
+            <p><%= favorite.Post.title %></p></a
+          >
         </li>
         <% }) %> <% } %>
       </ul>
-      <hr />
     </main>
 
     <% include ../static/partials/baseScripts.ejs %>

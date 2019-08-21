@@ -3,8 +3,6 @@ const router = express.Router();
 const validation = require("./validation");
 const userController = require("../controllers/userController");
 
-module.exports = router;
-
 router.get("/users/sign_up", userController.signUp);
 router.post("/users", validation.validateUsers, userController.create);
 
@@ -13,3 +11,5 @@ router.post("/users/sign_in", validation.validateUsers, userController.signIn);
 
 router.get("/users/sign_out", userController.signOut);
 router.get("/users/:id", userController.show);
+
+module.exports = router;
