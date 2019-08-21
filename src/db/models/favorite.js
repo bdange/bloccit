@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     return {
       include: [
         {
-          model: models.POST
+          model: models.Post
         }
       ],
       where: { userId: userId },
