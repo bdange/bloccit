@@ -48,8 +48,8 @@ module.exports = {
                 // #7
                 result["comments"] = comments;
               });
-            Favorite.scope({ method: ["favoritePosts", id] })
-              .all()
+            Favorite.scope({ method: ["favoritesPosts", id] })
+              .findAll()
               .then(favorites => {
                 result["favorites"] = favorites;
                 callback(null, result);
